@@ -1,0 +1,13 @@
+teleport-kube-agent:
+  enabled: true
+  proxyAddr: teleport.prd.moonswitch.io:443
+  highAvailability:
+    replicaCount: 3
+    requireAntiAffinity: true
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+  roles: kube
+  joinParams:
+    method: "token"
+    tokenName:

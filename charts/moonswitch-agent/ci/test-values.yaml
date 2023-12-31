@@ -1,4 +1,3 @@
 teleport-kube-agent:
   enabled: true
   kubeClusterName: ci-test
-  

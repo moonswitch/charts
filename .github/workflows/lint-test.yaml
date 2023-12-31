@@ -59,10 +59,10 @@ jobs:
       - name: Create teleport join token for cluster
         run: |
           token=$(tctl tokens add --type=kube --format=json | jq -r '.token')
+          echo "::add-mask::$token"
           echo "TELEPORT_TOKEN=$token" >> $GITHUB_ENV
 
-      - name: Bootstrap Cluster
-        id: bootstrap-cluster
+      - name: Create teleport join token secret in cluster
         run: |
           # Create moonswitch namespace and teleport secret
           echo "Creating 'moonswitch' namespace..."

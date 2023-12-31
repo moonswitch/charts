@@ -1,0 +1,22 @@
+apiVersion: v2
+name: moonswitch-agent
+description: Installs tools and apps used by the Moonswitch team to monitor and manage clusters.
+home: https://github.com/moonswitch/charts
+icon: https://static.moonswitch.com/logos/color/icon.svg
+sources:
+  - https://github.com/moonswitch/charts
+
+version: 0.1.0
+
+dependencies:
+  - name: teleport-kube-agent
+    repository: https://charts.releases.teleport.dev
+    condition: teleport-kube-agent.enabled
+    version: 14.3.0
+
+maintainers:
+  - name: Moonswitch Team
+    url: https://github.com/moonswitch
+
+keywords:
+  - moonswitch

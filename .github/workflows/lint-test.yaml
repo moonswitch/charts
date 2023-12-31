@@ -5,26 +5,29 @@ on: pull_request
 jobs:
   lint-test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Helm
-        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.5
+        uses: azure/setup-helm@v3
         with:
           version: v3.13.0
 
       # Python is required because `ct lint` runs Yamale (https://github.com/23andMe/Yamale) and
       # yamllint (https://github.com/adrienverge/yamllint) which require Python
       - name: Set up Python
-        uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+        uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
+        uses: helm/chart-testing-action@v2.6.1
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -38,8 +41,45 @@ jobs:
         run: ct lint --config ct.yaml
 
       - name: Create kind cluster
-        uses: helm/kind-action@dda0770415bac9fc20092cacbc54aa298604d140 # v1.8.0
+        uses: helm/kind-action@v1.8.0
         if: steps.list-changed.outputs.changed == 'true'
+
+      - name: Fetch Teleport binaries
+        uses: teleport-actions/setup@v1
+        with:
+          version: 14.2.3
+
+      - name: Fetch credentials using Machine ID
+        id: auth
+        uses: teleport-actions/auth@v2
+        with:
+          proxy: teleport.prd.moonswitch.io:443
+          token: moonswitch-automation
+
+      - name: Create teleport join token for cluster
+        run: |
+          token=$(tctl tokens add --type=kube --format=json | jq -r '.token')
+          echo "::add-mask::$token"
+          echo "TELEPORT_TOKEN=$token" >> $GITHUB_ENV
+
+      - name: Create teleport join token secret in cluster
+        run: |
+          # Create moonswitch namespace and teleport secret
+          echo "Creating 'moonswitch' namespace..."
+          kubectl create ns moonswitch --dry-run=client -o yaml | kubectl apply -f -
+
+          echo "Creating teleport join token secret...."
+          kubectl --namespace moonswitch create secret generic teleport-kube-agent-join-token --from-literal=auth-token=${TELEPORT_TOKEN} --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Run chart-testing (install)
         run: ct install --config ct.yaml
+
+      - name: Remove Teleport token
+        if: always()
+        run: |
+          if tctl tokens rm ${TELEPORT_TOKEN}; then
+            echo "Teleport token revoked."
+          else
+            echo "Teleport token does not exist."
+          fi
+

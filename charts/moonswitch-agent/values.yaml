@@ -1,0 +1,36 @@
+teleport-kube-agent:
+  enabled: true
+  proxyAddr: teleport.prd.moonswitch.io:443
+  highAvailability:
+    replicaCount: 3
+    requireAntiAffinity: true
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
+  roles: kube
+  joinParams:
+    method: "token"
+    tokenName:
+  extraLabels:
+    clusterRole:
+      "moonswitch.io/app": moonswitch-agent
+    clusterRoleBinding:
+      "moonswitch.io/app": moonswitch-agent
+    role:
+      "moonswitch.io/app": moonswitch-agent
+    roleBinding:
+      "moonswitch.io/app": moonswitch-agent
+    config:
+      "moonswitch.io/app": moonswitch-agent
+    deployment:
+      "moonswitch.io/app": moonswitch-agent
+    pod:
+      "moonswitch.io/app": moonswitch-agent
+    podDisruptionBudget:
+      "moonswitch.io/app": moonswitch-agent
+    podSecurityPolicy:
+      "moonswitch.io/app": moonswitch-agent
+    secret:
+      "moonswitch.io/app": moonswitch-agent
+    serviceAccount:
+      "moonswitch.io/app": moonswitch-agent

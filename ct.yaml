@@ -5,4 +5,8 @@ chart-dirs:
   - charts
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
+  - teleport=https://charts.releases.teleport.dev
 helm-extra-args: --timeout 600s
+validate-maintainers: false
+namespace: moonswitch
+release-label: "moonswitch.io/app"

@@ -1,4 +1,13 @@
 teleport-kube-agent:
   enabled: true
   kubeClusterName: ci-test
-  highAvailability: {}
+  highAvailability:
+    replicaCount: 1
+    requireAntiAffinity: false
+    podDisruptionBudget:
+      enabled: false
+  # The join token secret is created by Github Actions
+  # before the chart is installed
+  joinTokenSecret:
+    create: false
+    name: "teleport-kube-agent-join-token"

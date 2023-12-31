@@ -48,6 +48,7 @@ jobs:
         uses: teleport-actions/setup@v1
         with:
           version: 14.2.3
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Fetch credentials using Machine ID
         id: auth
@@ -55,14 +56,17 @@ jobs:
         with:
           proxy: teleport.prd.moonswitch.io:443
           token: moonswitch-automation
+        if: steps.list-changed.outputs.changed == 'true'
 
       - name: Create teleport join token for cluster
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
           token=$(tctl tokens add --type=kube --format=json | jq -r '.token')
           echo "::add-mask::$token"
           echo "TELEPORT_TOKEN=$token" >> $GITHUB_ENV
 
       - name: Create teleport join token secret in cluster
+        if: steps.list-changed.outputs.changed == 'true'
         run: |
           # Create moonswitch namespace and teleport secret
           echo "Creating 'moonswitch' namespace..."
@@ -72,6 +76,7 @@ jobs:
           kubectl --namespace moonswitch create secret generic teleport-kube-agent-join-token --from-literal=auth-token=${TELEPORT_TOKEN} --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
         run: ct install --config ct.yaml
 
       - name: Remove Teleport token

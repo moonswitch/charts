@@ -8,3 +8,5 @@ chart-repos:
   - teleport=https://charts.releases.teleport.dev
 helm-extra-args: --timeout 600s
 validate-maintainers: false
+namespace: moonswitch
+release-label: "moonswitch.io/app"

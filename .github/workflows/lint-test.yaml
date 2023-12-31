@@ -73,3 +73,13 @@ jobs:
 
       - name: Run chart-testing (install)
         run: ct install --config ct.yaml
+
+      - name: Remove Teleport token
+        if: always()
+        run: |
+          if tctl tokens rm ${TELEPORT_TOKEN}; then
+            echo "Teleport token revoked."
+          else
+            echo "Teleport token does not exist."
+          fi
+

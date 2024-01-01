@@ -37,8 +37,7 @@ jobs:
 
       - name: Convert GPG to legacy version
         run: |
-          gpg --batch --export >~/.gnupg/pubring.gpg
-          gpg --batch --pinentry-mode=loopback --yes --passphrase "${{ secrets.PASSPHRASE }}" --export-secret-keys >~/.gnupg/secring.gpg
+          gpg --batch --pinentry-mode=loopback --yes --passphrase "${{ secrets.PASSPHRASE }}" --export-secret-keys >~/.gnupg/pubring.gpg
 
       - name: Add dependency chart repos
         run: |

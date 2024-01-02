@@ -20,3 +20,8 @@ maintainers:
 
 keywords:
   - moonswitch
+
+annotations:
+  artifacthub.io/signKey: |
+    fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
+    url: https://keybase.io/moonswitchhq/pgp_keys.asc

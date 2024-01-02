@@ -38,8 +38,7 @@ jobs:
       - name: Convert GPG to legacy version
         run: |
           gpg --batch --pinentry-mode=loopback --yes --passphrase "${{ secrets.PASSPHRASE }}" --export-secret-keys >~/.gnupg/pubring.gpg
-          echo -n "${{ secrets.PASSPHRASE }}" > ~/.gnupg/passphrase
-          echo "CR_PASSPHRASE_FILE=~/.gnupg/passphrase" >> "$GITHUB_ENV"
+          echo "${{ secrets.PASSPHRASE }}" > passphrase-file.txt
 
       - name: Add dependency chart repos
         run: |
@@ -51,4 +50,5 @@ jobs:
           charts_dir: charts
           config: cr.yaml
         env:
+          CR_PASSPHRASE_FILE: passphrase-file.txt
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

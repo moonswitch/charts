@@ -11,3 +11,5 @@ teleport-kube-agent:
   joinTokenSecret:
     create: false
     name: "teleport-kube-agent-join-token"
+cloudflare-tunnel-remote:
+  enabled: true

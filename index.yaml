@@ -1,6 +1,33 @@
 apiVersion: v1
 entries:
   moonswitch-agent:
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
+        url: https://keybase.io/moonswitchhq/pgp_keys.asc
+    apiVersion: v2
+    created: "2024-01-02T16:47:55.92195806Z"
+    dependencies:
+    - condition: teleport-kube-agent.enabled
+      name: teleport-kube-agent
+      repository: https://charts.releases.teleport.dev
+      version: 14.3.0
+    description: Installs tools and apps used by the Moonswitch team to monitor and
+      manage clusters.
+    digest: 232a6cfe42ffef19b070f51497a67ede9b19df30c1ff72697eef6155d352d52a
+    home: https://github.com/moonswitch/charts
+    icon: https://static.moonswitch.com/logos/color/icon.svg
+    keywords:
+    - moonswitch
+    maintainers:
+    - name: Moonswitch Team
+      url: https://github.com/moonswitch
+    name: moonswitch-agent
+    sources:
+    - https://github.com/moonswitch/charts
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.2.0/moonswitch-agent-0.2.0.tgz
+    version: 0.2.0
   - apiVersion: v2
     created: "2024-01-02T13:13:09.176984617Z"
     dependencies:
@@ -24,4 +51,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-02T13:13:09.177063605Z"
+generated: "2024-01-02T16:47:55.921972026Z"

@@ -18,6 +18,18 @@
           "type": "boolean"
         }
       }
+    },
+    "cloudflare-tunnel-remote": {
+      "description": "Values for the cloudflare-tunnel-remote subchart",
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      }
     }
   }
 }

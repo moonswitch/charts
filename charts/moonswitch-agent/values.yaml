@@ -34,3 +34,6 @@ teleport-kube-agent:
       "moonswitch.io/app": moonswitch-agent
     serviceAccount:
       "moonswitch.io/app": moonswitch-agent
+
+cloudflare-tunnel-remote:
+  enabled: true

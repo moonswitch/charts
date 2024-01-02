@@ -6,6 +6,37 @@ entries:
         fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
         url: https://keybase.io/moonswitchhq/pgp_keys.asc
     apiVersion: v2
+    created: "2024-01-02T22:49:51.687808782Z"
+    dependencies:
+    - condition: teleport-kube-agent.enabled
+      name: teleport-kube-agent
+      repository: https://charts.releases.teleport.dev
+      version: 14.3.0
+    - condition: cloudflare-tunnel-remote.enabled
+      name: cloudflare-tunnel-remote
+      repository: https://cloudflare.github.io/helm-charts
+      version: 0.1.1
+    description: Installs tools and apps used by the Moonswitch team to monitor and
+      manage clusters.
+    digest: 3d73f1d6b881dc5e4758858640e28379f30eb303473608586983412a038d2e0b
+    home: https://github.com/moonswitch/charts
+    icon: https://static.moonswitch.com/logos/color/icon.svg
+    keywords:
+    - moonswitch
+    maintainers:
+    - name: Moonswitch Team
+      url: https://github.com/moonswitch
+    name: moonswitch-agent
+    sources:
+    - https://github.com/moonswitch/charts
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.3.0/moonswitch-agent-0.3.0.tgz
+    version: 0.3.0
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
+        url: https://keybase.io/moonswitchhq/pgp_keys.asc
+    apiVersion: v2
     created: "2024-01-02T16:47:55.92195806Z"
     dependencies:
     - condition: teleport-kube-agent.enabled
@@ -51,4 +82,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-02T16:47:55.921972026Z"
+generated: "2024-01-02T22:49:51.687821716Z"

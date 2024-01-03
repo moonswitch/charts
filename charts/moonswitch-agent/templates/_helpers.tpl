@@ -35,6 +35,7 @@ Common labels
 */}}
 {{- define "moonswitch-agent.labels" -}}
 helm.sh/chart: {{ include "moonswitch-agent.chart" . }}
+"moonswitch.io/app": moonswitch-agent
 {{ include "moonswitch-agent.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}

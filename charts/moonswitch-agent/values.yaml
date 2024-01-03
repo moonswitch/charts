@@ -43,6 +43,9 @@ cloudflare-tunnel-remote:
 
 kube-prometheus-stack:
   enabled: true
+  commonLabels:
+    "moonswitch.io/app": moonswitch-agent
+
   alertmanager:
     alertmanagerSpec:
       routePrefix: /alertmanager
@@ -93,6 +96,8 @@ kube-prometheus-stack:
 weave-gitops:
   enabled: true
   replicaCount: 1
+  podLabels:
+    "moonswitch.io/app": moonswitch-agent
   additionalArgs:
     - --insecure-no-authentication-user=gitops-dashboard-user
     - --route-prefix=/gitops

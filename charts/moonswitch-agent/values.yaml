@@ -167,8 +167,6 @@ cost-analyzer:
       fqdn: http://kube-prometheus-stack-prometheus:9090
     grafana:
       enabled: false
-      domainName: kube-prometheus-stack-grafana
-      scheme: http
       proxy: false
     notifications:
       alertmanager:
@@ -177,7 +175,7 @@ cost-analyzer:
     additionalLabels:
       "moonswitch.io/app": moonswitch-agent
   kubecostFrontend:
-    image: public.ecr.aws/kubecost/frontend
+    image: "public.ecr.aws/kubecost/frontend"
     resources:
       requests:
         cpu: "10m"
@@ -210,7 +208,7 @@ cost-analyzer:
       serviceMonitor:
         enabled: true
   kubecostModel:
-    image: public.ecr.aws/kubecost/cost-model
+    image: "public.ecr.aws/kubecost/cost-model"
     outOfClusterPromMetricsEnabled: false
     cloudCost:
       enabled: false
@@ -226,7 +224,7 @@ cost-analyzer:
   networkCosts:
     enabled: true
     image:
-      repository: public.ecr.aws/kubecost/kubecost-network-costs
+      repository: "public.ecr.aws/kubecost/kubecost-network-costs"
     config:
       services:
         amazon-web-services: false

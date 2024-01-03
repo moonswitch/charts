@@ -1,4 +1,4 @@
-{{- if .Values.weave-gitops.enabled -}}
+{{- if .Values.weave-gitops.enabled }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole

@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.4.0
+version: 0.5.0
 
 dependencies:
   - name: teleport-kube-agent
@@ -21,6 +21,10 @@ dependencies:
     repository: https://prometheus-community.github.io/helm-charts
     condition: kube-prometheus-stack.enabled
     version: 55.5.1
+  - name: weave-gitops
+    repository: https://helm.gitops.weave.works
+    condition: weave-gitops.enabled
+    version: 4.0.36
 
 maintainers:
   - name: Moonswitch Team

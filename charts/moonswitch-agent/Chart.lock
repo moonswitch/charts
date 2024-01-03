@@ -8,5 +8,8 @@ dependencies:
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 55.5.1
-digest: sha256:63151767ac3324638e1814e908dfec06b2e3b1ef108c5d3075f7aff6345b0200
-generated: "2024-01-02T18:01:06.773775-06:00"
+- name: weave-gitops
+  repository: https://helm.gitops.weave.works
+  version: 4.0.36
+digest: sha256:ca66765201c1d62bb4ccae82313de27d4fc0c41240837f1bfd44d716ba1d8978
+generated: "2024-01-03T07:04:38.606886-06:00"

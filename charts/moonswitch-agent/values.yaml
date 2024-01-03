@@ -37,3 +37,52 @@ teleport-kube-agent:
 
 cloudflare-tunnel-remote:
   enabled: true
+
+kube-prometheus-stack:
+  enabled: true
+  alertmanager:
+    alertmanagerSpec:
+      routePrefix: /alertmanager
+      storage:
+        volumeClaimTemplate:
+          spec:
+            resources:
+              requests:
+                storage: 40Gi
+
+  grafana:
+    defaultDashboardsTimezone: browser
+    grafana.ini:
+      server:
+        domain:
+        root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+        serve_from_sub_path: true
+      auth:
+        disable_login_form: true
+      auth.anonymous:
+        enabled: true
+        org_name: Moonswitch
+        org_role: admin
+
+  cleanPrometheusOperatorObjectNames: true
+
+  prometheus:
+    prometheusSpec:
+      routePrefix: /prometheus
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            resources:
+              requests:
+                storage: 100Gi
+
+  prometheus-node-exporter:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: eks.amazonaws.com/compute-type
+                operator: NotIn
+                values:
+                  - fargate

@@ -8,6 +8,7 @@ chart-repos:
   - cloudflare=https://cloudflare.github.io/helm-charts
   - prometheus-community=https://prometheus-community.github.io/helm-charts
   - weave-works=https://helm.gitops.weave.works
+  - kubecost=https://kubecost.github.io/cost-analyzer
 helm-extra-args: --timeout 600s
 validate-maintainers: false
 namespace: moonswitch

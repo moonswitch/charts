@@ -224,7 +224,9 @@ cost-analyzer:
   networkCosts:
     enabled: true
     image:
-      repository: "public.ecr.aws/kubecost/kubecost-network-costs"
+      repository: gcr.io/kubecost1/kubecost-network-costs
+    # image:
+    #   repository: "public.ecr.aws/kubecost/kubecost-network-costs"
     config:
       services:
         amazon-web-services: false

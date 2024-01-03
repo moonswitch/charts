@@ -28,7 +28,7 @@ dependencies:
   - name: cost-analyzer
     repository: https://kubecost.github.io/cost-analyzer
     condition: cost-analyzer.enabled
-    version: 1.108.0
+    version: 1.106.5
 
 maintainers:
   - name: Moonswitch Team

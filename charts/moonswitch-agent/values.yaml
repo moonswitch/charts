@@ -223,10 +223,7 @@ cost-analyzer:
         memory: "256Mi"
   networkCosts:
     enabled: true
-    image:
-      repository: gcr.io/kubecost1/kubecost-network-costs
-    # image:
-    #   repository: "public.ecr.aws/kubecost/kubecost-network-costs"
+    image: "public.ecr.aws/kubecost/kubecost-network-costs:v0.17.2"
     config:
       services:
         amazon-web-services: false

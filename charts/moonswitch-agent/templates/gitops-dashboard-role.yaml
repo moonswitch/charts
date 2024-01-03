@@ -1,5 +1,5 @@
-{{- if .Values.weave-gitops.enabled }}
----
+{{ $weave_gitops_enabled := index .Values "weave-gitops" "enabled" }}
+{{- if $weave_gitops_enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:

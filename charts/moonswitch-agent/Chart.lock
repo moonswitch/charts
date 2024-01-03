@@ -5,5 +5,8 @@ dependencies:
 - name: cloudflare-tunnel-remote
   repository: https://cloudflare.github.io/helm-charts
   version: 0.1.1
-digest: sha256:b768972015e265f1ec5de52ba3c109f015356155f49f4580ee0505ff23aa13e1
-generated: "2024-01-02T16:46:01.951094-06:00"
+- name: kube-prometheus-stack
+  repository: https://prometheus-community.github.io/helm-charts
+  version: 55.5.1
+digest: sha256:63151767ac3324638e1814e908dfec06b2e3b1ef108c5d3075f7aff6345b0200
+generated: "2024-01-02T18:01:06.773775-06:00"

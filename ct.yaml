@@ -6,6 +6,7 @@ chart-dirs:
 chart-repos:
   - teleport=https://charts.releases.teleport.dev
   - cloudflare=https://cloudflare.github.io/helm-charts
+  - prometheus-community=https://prometheus-community.github.io/helm-charts
 helm-extra-args: --timeout 600s
 validate-maintainers: false
 namespace: moonswitch

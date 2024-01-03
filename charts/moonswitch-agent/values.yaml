@@ -81,6 +81,29 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 100Gi
+      additionalScrapeConfigs:
+        - job_name: kubecost
+          honor_labels: true
+          scrape_interval: 1m
+          scrape_timeout: 60s
+          metrics_path: /metrics
+          scheme: http
+          dns_sd_configs:
+          - names:
+            - kubecost-cost-analyzer
+            type: 'A'
+            port: 9003
+        - job_name: kubecost-networking
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+          # Scrape only the the targets matching the following metadata
+            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+              action: keep
+              regex: kubecost
+            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+              action: keep
+              regex: network-costs
 
   prometheus-node-exporter:
     affinity:
@@ -93,6 +116,40 @@ kube-prometheus-stack:
                 values:
                   - fargate
 
+  additionalPrometheusRulesMap:
+    kubecost:
+      groups:
+        - name: CPU
+          rules:
+            - expr: sum(rate(container_cpu_usage_seconds_total{container!=""}[5m]))
+              record: cluster:cpu_usage:rate5m
+            - expr: rate(container_cpu_usage_seconds_total{container!=""}[5m])
+              record: cluster:cpu_usage_nosum:rate5m
+            - expr: avg(irate(container_cpu_usage_seconds_total{container!="POD", container!=""}[5m])) by (container,pod,namespace)
+              record: kubecost_container_cpu_usage_irate
+            - expr: sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (container,pod,namespace)
+              record: kubecost_container_memory_working_set_bytes
+            - expr: sum(container_memory_working_set_bytes{container!="POD",container!=""})
+              record: kubecost_cluster_memory_working_set_bytes
+        - name: Savings
+          rules:
+            - expr: sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod))
+              record: kubecost_savings_cpu_allocation
+              labels:
+                daemonset: "false"
+            - expr: sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod)) / sum(kube_node_info)
+              record: kubecost_savings_cpu_allocation
+              labels:
+                daemonset: "true"
+            - expr: sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod))
+              record: kubecost_savings_memory_allocation_bytes
+              labels:
+                daemonset: "false"
+            - expr: sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod)) / sum(kube_node_info)
+              record: kubecost_savings_memory_allocation_bytes
+              labels:
+                daemonset: "true"
+
 weave-gitops:
   enabled: true
   replicaCount: 1
@@ -101,3 +158,75 @@ weave-gitops:
   additionalArgs:
     - --insecure-no-authentication-user=gitops-dashboard-user
     - --route-prefix=/gitops
+
+cost-analyzer:
+  enabled: true
+  global:
+    prometheus:
+      enabled: false
+      fqdn: http://kube-prometheus-stack-prometheus:9090
+    grafana:
+      enabled: false
+      domainName: kube-prometheus-stack-grafana
+      scheme: http
+      proxy: false
+    notifications:
+      alertmanager:
+        enabled: true
+        fqdn: http://kube-prometheus-stack-alertmanager:9093
+    additionalLabels:
+      "moonswitch.io/app": moonswitch-agent
+  kubecostFrontend:
+    image: public.ecr.aws/kubecost/frontend
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "55Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+    ipv6:
+      enabled: false
+  grafana:
+    sidecar:
+      dashboards:
+        enabled: true
+      datasources:
+        enabled: false
+  prometheus:
+    nodeExporter:
+      enabled: false
+    serviceAccounts:
+      nodeExporter:
+        create: false
+    kubeStateMetrics:
+      enabled: false
+    kube-state-metrics:
+      disabled: true
+  kubecostMetrics:
+    emitKsmV1Metrics: false
+    emitKsmV1MetricsOnly: true
+    exporter:
+      serviceMonitor:
+        enabled: true
+  kubecostModel:
+    image: public.ecr.aws/kubecost/cost-model
+    outOfClusterPromMetricsEnabled: false
+    cloudCost:
+      enabled: false
+    warmCache: true
+    warmSavingsCache: true
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "55Mi"
+      limits:
+        cpu: "800m"
+        memory: "256Mi"
+  networkCosts:
+    enabled: true
+    image:
+      repository: public.ecr.aws/kubecost/kubecost-network-costs
+    config:
+      services:
+        amazon-web-services: false

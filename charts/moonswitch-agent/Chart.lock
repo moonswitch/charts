@@ -11,5 +11,8 @@ dependencies:
 - name: weave-gitops
   repository: https://helm.gitops.weave.works
   version: 4.0.36
-digest: sha256:ca66765201c1d62bb4ccae82313de27d4fc0c41240837f1bfd44d716ba1d8978
-generated: "2024-01-03T07:04:38.606886-06:00"
+- name: cost-analyzer
+  repository: https://kubecost.github.io/cost-analyzer
+  version: 1.108.0
+digest: sha256:6e984b9c7a4f6e1a10e10a7e62d51c5ff9342fe3dfa2942f562d7ea0ab4f2323
+generated: "2024-01-03T16:16:55.592327-06:00"

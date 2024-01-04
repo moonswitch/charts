@@ -48,7 +48,6 @@ kube-prometheus-stack:
 
   alertmanager:
     alertmanagerSpec:
-      routePrefix: /alertmanager
       storage:
         volumeClaimTemplate:
           spec:
@@ -58,23 +57,23 @@ kube-prometheus-stack:
 
   grafana:
     defaultDashboardsTimezone: browser
+    persistence:
+      enabled: true
     grafana.ini:
-      server:
-        domain:
-        root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
-        serve_from_sub_path: true
       auth:
         disable_login_form: true
+      auth.basic:
+        enabled: false
       auth.anonymous:
         enabled: true
-        org_name: Moonswitch
-        org_role: admin
+        org_name: Main Org.
+        org_role: Admin
+        hide_version: true
 
   cleanPrometheusOperatorObjectNames: true
 
   prometheus:
     prometheusSpec:
-      routePrefix: /prometheus
       storageSpec:
         volumeClaimTemplate:
           spec:
@@ -90,20 +89,17 @@ kube-prometheus-stack:
           scheme: http
           dns_sd_configs:
           - names:
-            - kubecost-cost-analyzer
+            - moonswitch-agent-cost-analyzer
             type: 'A'
             port: 9003
         - job_name: kubecost-networking
           kubernetes_sd_configs:
             - role: pod
           relabel_configs:
-          # Scrape only the the targets matching the following metadata
-            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+          # These will need to be updated when we update the chart version past 1.106.x
+            - source_labels: [__meta_kubernetes_pod_label_app]
               action: keep
-              regex: kubecost
-            - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
-              action: keep
-              regex: network-costs
+              regex: moonswitch-agent-network-costs
 
   prometheus-node-exporter:
     affinity:
@@ -157,21 +153,20 @@ weave-gitops:
     "moonswitch.io/app": moonswitch-agent
   additionalArgs:
     - --insecure-no-authentication-user=gitops-dashboard-user
-    - --route-prefix=/gitops
 
 cost-analyzer:
   enabled: true
   global:
     prometheus:
       enabled: false
-      fqdn: http://kube-prometheus-stack-prometheus:9090
+      fqdn: http://moonswitch-agent-kube-prom-prometheus:9090
     grafana:
       enabled: false
       proxy: false
     notifications:
       alertmanager:
         enabled: true
-        fqdn: http://kube-prometheus-stack-alertmanager:9093
+        fqdn: http://moonswitch-agent-kube-prom-alertmanager:9093
     additionalLabels:
       "moonswitch.io/app": moonswitch-agent
   kubecostFrontend:
@@ -226,4 +221,4 @@ cost-analyzer:
     image: "public.ecr.aws/kubecost/kubecost-network-costs:v0.17.2"
     config:
       services:
-        amazon-web-services: false
+        amazon-web-services: true

@@ -1,0 +1,9 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-static-site
+  namespace: {{ .Release.Namespace }}
+data:
+{{ (tpl (.Files.Glob "cluster_site/*").AsConfig .) | indent 2 }}
+{{- end }}

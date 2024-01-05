@@ -14,5 +14,8 @@ dependencies:
 - name: cost-analyzer
   repository: https://kubecost.github.io/cost-analyzer
   version: 1.106.5
-digest: sha256:7d58267ef289431c3e7c40c18447fd16ca239f89a0d2ff804de14e01d827c28e
-generated: "2024-01-03T17:21:42.02816-06:00"
+- name: nginx
+  repository: https://charts.bitnami.com/bitnami
+  version: 15.5.3
+digest: sha256:e7b2580c02c13649da674aa61079459759d662bf99540d3ad3bdb04cf1401e4f
+generated: "2024-01-04T16:35:28.415829-06:00"

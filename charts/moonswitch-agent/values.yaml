@@ -1,5 +1,6 @@
 nameOverride: ""
 fullnameOverride: ""
+clusterName:
 
 teleport-kube-agent:
   enabled: true
@@ -222,3 +223,13 @@ cost-analyzer:
     config:
       services:
         amazon-web-services: true
+
+nginx:
+  enabled: true
+  image:
+    registry: public.ecr.aws
+    repository: o2n4c0l9/nginx
+    tag: 1.25.3
+  staticSiteConfigmap: nginx-static-site
+  service:
+    type: ClusterIP

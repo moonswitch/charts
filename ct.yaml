@@ -9,6 +9,7 @@ chart-repos:
   - prometheus-community=https://prometheus-community.github.io/helm-charts
   - weave-works=https://helm.gitops.weave.works
   - kubecost=https://kubecost.github.io/cost-analyzer
+  - bitnami=https://charts.bitnami.com/bitnami
 helm-extra-args: --timeout 600s
 validate-maintainers: false
 namespace: moonswitch

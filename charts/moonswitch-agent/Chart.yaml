@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.6.1
+version: 0.7.0
 
 dependencies:
   - name: teleport-kube-agent
@@ -29,6 +29,10 @@ dependencies:
     repository: https://kubecost.github.io/cost-analyzer
     condition: cost-analyzer.enabled
     version: 1.106.5
+  - name: nginx
+    repository: https://charts.bitnami.com/bitnami
+    condition: nginx.enabled
+    version: 15.5.3
 
 maintainers:
   - name: Moonswitch Team

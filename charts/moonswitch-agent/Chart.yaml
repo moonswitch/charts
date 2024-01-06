@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.7.0
+version: 0.8.0
 
 dependencies:
   - name: teleport-kube-agent
@@ -33,6 +33,14 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: nginx.enabled
     version: 15.5.3
+  - name: loki
+    repository: https://grafana.github.io/helm-charts
+    condition: loki.enabled
+    version: 5.41.4
+  - name: promtail
+    repository: https://grafana.github.io/helm-charts
+    condition: promtail.enabled
+    version: 6.15.3
 
 maintainers:
   - name: Moonswitch Team

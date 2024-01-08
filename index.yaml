@@ -6,6 +6,61 @@ entries:
         fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
         url: https://keybase.io/moonswitchhq/pgp_keys.asc
     apiVersion: v2
+    created: "2024-01-08T17:26:47.207757832Z"
+    dependencies:
+    - condition: teleport-kube-agent.enabled
+      name: teleport-kube-agent
+      repository: https://charts.releases.teleport.dev
+      version: 14.3.0
+    - condition: cloudflare-tunnel-remote.enabled
+      name: cloudflare-tunnel-remote
+      repository: https://cloudflare.github.io/helm-charts
+      version: 0.1.1
+    - condition: kube-prometheus-stack.enabled
+      name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 55.5.1
+    - condition: weave-gitops.enabled
+      name: weave-gitops
+      repository: https://helm.gitops.weave.works
+      version: 4.0.36
+    - condition: cost-analyzer.enabled
+      name: cost-analyzer
+      repository: https://kubecost.github.io/cost-analyzer
+      version: 1.106.5
+    - condition: nginx.enabled
+      name: nginx
+      repository: https://charts.bitnami.com/bitnami
+      version: 15.5.3
+    - condition: loki.enabled
+      name: loki
+      repository: https://grafana.github.io/helm-charts
+      version: 5.41.4
+    - condition: promtail.enabled
+      name: promtail
+      repository: https://grafana.github.io/helm-charts
+      version: 6.15.3
+    description: Installs tools and apps used by the Moonswitch team to monitor and
+      manage clusters.
+    digest: 6bd539d1b2b63cfa474328ea151d473a71db70fc8ee507b1d39ae8aecddf13ae
+    home: https://github.com/moonswitch/charts
+    icon: https://static.moonswitch.com/logos/color/icon.svg
+    keywords:
+    - moonswitch
+    maintainers:
+    - name: Moonswitch Team
+      url: https://github.com/moonswitch
+    name: moonswitch-agent
+    sources:
+    - https://github.com/moonswitch/charts
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.8.0/moonswitch-agent-0.8.0.tgz
+    version: 0.8.0
+  - annotations:
+      artifacthub.io/signKey: |
+        fingerprint: 2931692a7b5c769e42c89817be65ebc8bc14925e
+        url: https://keybase.io/moonswitchhq/pgp_keys.asc
+    apiVersion: v2
     created: "2024-01-05T16:59:11.271522295Z"
     dependencies:
     - condition: teleport-kube-agent.enabled
@@ -289,4 +344,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-05T16:59:11.271574734Z"
+generated: "2024-01-08T17:26:47.207785133Z"

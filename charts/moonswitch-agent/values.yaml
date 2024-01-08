@@ -70,6 +70,17 @@ kube-prometheus-stack:
         org_name: Main Org.
         org_role: Admin
         hide_version: true
+    sidecar:
+      dashboards:
+        searchNamespace: moonswitch
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://{{ printf "%s-loki" .Release.Name }}:3100
+        jsonData:
+          maxLines: 1000
+          timeout: 360
 
   cleanPrometheusOperatorObjectNames: true
 
@@ -233,3 +244,71 @@ nginx:
   staticSiteConfigmap: nginx-static-site
   service:
     type: ClusterIP
+
+loki:
+  enabled: true
+  loki:
+    auth_enabled: false
+    commonConfig:
+      replication_factor: 1
+    structuredConfig:
+      query_range:
+        parallelise_shardable_queries: false
+    storage:
+      type: 'filesystem'
+  singleBinary:
+    replicas: 1
+  test:
+    enabled: false
+  monitoring:
+    lokiCanary:
+      enabled: false
+    selfMonitoring:
+      enabled: false
+      grafanaAgent:
+        installOperator: false
+    serviceMonitor:
+      enabled: true
+
+promtail:
+  enabled: true
+  daemonset:
+    autoscaling:
+      enabled: true
+  tolerations: []
+  config:
+    snippets:
+      pipelineStages:
+        - cri: {}
+        - drop:
+            source: "namespace"
+            expression: "(default)"  # Use this to drop logs from client app namespaces e.g "(default|client-app1|cool-app-namespace)"
+  serviceMonitor:
+    enabled: true
+    prometheusRule:
+      enabled: true
+      rules:
+        - alert: PromtailRequestErrors
+          expr: 100 * sum(rate(promtail_request_duration_seconds_count{status_code=~"5..|failed"}[1m])) by (namespace, job, route, instance) / sum(rate(promtail_request_duration_seconds_count[1m])) by (namespace, job, route, instance) > 10
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            description: |
+              The {{ $labels.job }} {{ $labels.route }} is experiencing
+              {{ printf "%.2f" $value }} errors.
+              VALUE = {{ $value }}
+              LABELS = {{ $labels }}
+            summary: Promtail request errors (instance {{ $labels.instance }})
+        - alert: PromtailRequestLatency
+          expr: histogram_quantile(0.99, sum(rate(promtail_request_duration_seconds_bucket[5m])) by (le)) > 1
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Promtail request latency (instance {{ $labels.instance }})
+            description: |
+              The {{ $labels.job }} {{ $labels.route }} is experiencing
+              {{ printf "%.2f" $value }}s 99th percentile latency.
+              VALUE = {{ $value }}
+              LABELS = {{ $labels }}

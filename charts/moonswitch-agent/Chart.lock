@@ -17,5 +17,11 @@ dependencies:
 - name: nginx
   repository: https://charts.bitnami.com/bitnami
   version: 15.5.3
-digest: sha256:e7b2580c02c13649da674aa61079459759d662bf99540d3ad3bdb04cf1401e4f
-generated: "2024-01-04T16:35:28.415829-06:00"
+- name: loki
+  repository: https://grafana.github.io/helm-charts
+  version: 5.41.4
+- name: promtail
+  repository: https://grafana.github.io/helm-charts
+  version: 6.15.3
+digest: sha256:0eb0feedbfc3f5cc529676408ad8ec7b8266a491142f4483cf2e2ce9d66de752
+generated: "2024-01-06T06:23:51.791593-06:00"

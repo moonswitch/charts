@@ -4,3 +4,10 @@
   vertical-align: -.125em;
   fill: currentcolor
 }
+
+.brand-icon {
+  width: 2em;
+  height: 2em;
+  vertical-align: -.5em;
+  fill: currentColor;
+}

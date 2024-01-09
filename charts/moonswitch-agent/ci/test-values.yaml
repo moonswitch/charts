@@ -16,3 +16,14 @@ cloudflare-tunnel-remote:
 clusterName: ci-testing
 metrics-server:
   enabled: true
+  args:
+    - --kubelet-insecure-tls
+  replicas: 1
+  podDisruptionBudget: {}
+  addonResizer:
+    enabled: false
+  metrics:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+  affinity: {}

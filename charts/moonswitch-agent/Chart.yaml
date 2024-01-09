@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.9.0
+version: 0.10.0
 
 dependencies:
   - name: teleport-kube-agent
@@ -53,6 +53,11 @@ dependencies:
     repository: https://helm-charts.komodor.io
     condition: helm-dashboard.enabled
     version: 0.1.10
+  - name: trivy-operator
+    repository: https://aquasecurity.github.io/helm-charts
+    condition: trivy-operator.enabled
+    version: 0.20.1
+
 
 maintainers:
   - name: Moonswitch Team

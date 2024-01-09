@@ -32,5 +32,8 @@ dependencies:
 - name: helm-dashboard
   repository: https://helm-charts.komodor.io
   version: 0.1.10
-digest: sha256:49fcd601066dcca35ec19c2708ddd2722b506d11b90573eece1c5611586d6223
-generated: "2024-01-09T08:51:16.126394-06:00"
+- name: trivy-operator
+  repository: https://aquasecurity.github.io/helm-charts
+  version: 0.20.1
+digest: sha256:83b5c8dcd3c4c90fd52c4fe1ce10243295cd9088b82a3cd4eed9848fb0e8c5b3
+generated: "2024-01-09T15:27:07.8434-06:00"

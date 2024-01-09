@@ -367,3 +367,18 @@ helm-dashboard:
     - --no-analytics
     - --no-browser
     - --bind=0.0.0.0
+
+trivy-operator:
+  enabled: true
+  operator:
+    builtInTrivyServer: true
+  serviceMonitor:
+    enabled: true
+  trivy:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100M
+      limits:
+        cpu: 500m
+        memory: 1G

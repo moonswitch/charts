@@ -13,6 +13,7 @@ chart-repos:
   - grafana=https://grafana.github.io/helm-charts
   - metrics-server=https://kubernetes-sigs.github.io/metrics-server
   - kubernetes-dashboard=https://kubernetes.github.io/dashboard
+  - komodorio=https://helm-charts.komodor.io
 helm-extra-args: --timeout 600s
 validate-maintainers: false
 namespace: moonswitch

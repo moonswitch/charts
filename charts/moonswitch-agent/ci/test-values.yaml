@@ -13,7 +13,6 @@ teleport-kube-agent:
     name: "teleport-kube-agent-join-token"
 cloudflare-tunnel-remote:
   enabled: true
-kube-prometheus-stack:
-  grafana.ini:
-    server:
-      domain: example.com
+clusterName: ci-testing
+metrics-server:
+  enabled: true

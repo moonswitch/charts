@@ -49,6 +49,10 @@ dependencies:
     repository: https://kubernetes.github.io/dashboard
     condition: kubernetes-dashboard.enabled
     version: 6.0.8
+  - name: helm-dashboard
+    repository: https://helm-charts.komodor.io
+    condition: helm-dashboard.enabled
+    version: 0.1.10
 
 maintainers:
   - name: Moonswitch Team

@@ -29,5 +29,8 @@ dependencies:
 - name: kubernetes-dashboard
   repository: https://kubernetes.github.io/dashboard
   version: 6.0.8
-digest: sha256:07d378497cd8ea220401e7adcfdfff2b586124584e277297ddd2e6ee8e9fb847
-generated: "2024-01-08T14:33:08.234977-06:00"
+- name: helm-dashboard
+  repository: https://helm-charts.komodor.io
+  version: 0.1.10
+digest: sha256:49fcd601066dcca35ec19c2708ddd2722b506d11b90573eece1c5611586d6223
+generated: "2024-01-09T08:51:16.126394-06:00"

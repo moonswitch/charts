@@ -360,3 +360,10 @@ kubernetes-dashboard:
     "moonswitch.io/app": moonswitch-agent
   serviceAccount:
     name: moonswitch-agent-kubernetes-dashboard
+
+helm-dashboard:
+  enabled: true
+  extraArgs:
+    - --no-analytics
+    - --no-browser
+    - --bind=0.0.0.0

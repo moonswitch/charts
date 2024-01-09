@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.8.0
+version: 0.9.0
 
 dependencies:
   - name: teleport-kube-agent
@@ -41,6 +41,18 @@ dependencies:
     repository: https://grafana.github.io/helm-charts
     condition: promtail.enabled
     version: 6.15.3
+  - name: metrics-server
+    repository: https://kubernetes-sigs.github.io/metrics-server
+    condition: metrics-server.enabled
+    version: 3.11.0
+  - name: kubernetes-dashboard
+    repository: https://kubernetes.github.io/dashboard
+    condition: kubernetes-dashboard.enabled
+    version: 6.0.8
+  - name: helm-dashboard
+    repository: https://helm-charts.komodor.io
+    condition: helm-dashboard.enabled
+    version: 0.1.10
 
 maintainers:
   - name: Moonswitch Team

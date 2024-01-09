@@ -49,6 +49,9 @@ jobs:
           helm repo add kubecost https://kubecost.github.io/cost-analyzer
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server
+          helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
+          helm repo add komodorio https://helm-charts.komodor.io
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0

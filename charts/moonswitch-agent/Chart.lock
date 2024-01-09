@@ -23,5 +23,14 @@ dependencies:
 - name: promtail
   repository: https://grafana.github.io/helm-charts
   version: 6.15.3
-digest: sha256:0eb0feedbfc3f5cc529676408ad8ec7b8266a491142f4483cf2e2ce9d66de752
-generated: "2024-01-06T06:23:51.791593-06:00"
+- name: metrics-server
+  repository: https://kubernetes-sigs.github.io/metrics-server
+  version: 3.11.0
+- name: kubernetes-dashboard
+  repository: https://kubernetes.github.io/dashboard
+  version: 6.0.8
+- name: helm-dashboard
+  repository: https://helm-charts.komodor.io
+  version: 0.1.10
+digest: sha256:49fcd601066dcca35ec19c2708ddd2722b506d11b90573eece1c5611586d6223
+generated: "2024-01-09T08:51:16.126394-06:00"

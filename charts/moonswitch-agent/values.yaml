@@ -312,3 +312,58 @@ promtail:
               {{ printf "%.2f" $value }}s 99th percentile latency.
               VALUE = {{ $value }}
               LABELS = {{ $labels }}
+
+metrics-server:
+  enabled: false  # off by default since many clusters will already have it installed
+  replicas: 2
+  podDisruptionBudget:
+    minAvailable: 1
+  addonResizer:
+    enabled: true
+  metrics:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+              - metrics-server
+            - key: app.kubernetes.io/instance
+              operator: In
+              values:
+              - moonswitch-agent
+          topologyKey: kubernetes.io/hostname
+
+kubernetes-dashboard:
+  enabled: true
+  extraArgs:
+    - --token-ttl=0
+    - --system-banner=<div style="text-align:center"><h3>This dashboard as FULL ADMIN access to this cluster! Use caution!</h3></div>
+    - --system-banner-severity=WARNING
+  protocolHttp: true
+  service:
+    externalPort: 80
+  settings:
+    itemsPerPage: 10
+    labelsLimit: 3
+    logsAutoRefreshTimeInterval: 5
+    resourceAutoRefreshTimeInterval: 30
+    disableAccessDeniedNotifications: false
+    defaultNamespace: "_all"
+    namespaceFallbackList: []
+  commonLabels:
+    "moonswitch.io/app": moonswitch-agent
+  serviceAccount:
+    name: moonswitch-agent-kubernetes-dashboard
+
+helm-dashboard:
+  enabled: true
+  extraArgs:
+    - --no-analytics
+    - --no-browser
+    - --bind=0.0.0.0

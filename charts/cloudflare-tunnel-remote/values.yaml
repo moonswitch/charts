@@ -73,7 +73,7 @@ serviceMonitor:
   # -- Chooses the metric’s labels on collisions with target labels.
   honorLabels: false
   # -- Path to scrape metrics
-  path: /metrics
+  path: null
   # -- Timeout for scrape metrics request
   scrapeTimeout: 10s
   # -- Relabel metrics

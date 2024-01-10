@@ -76,3 +76,7 @@ serviceMonitor:
   path: /metrics
   # -- Timeout for scrape metrics request
   scrapeTimeout: 10s
+  # -- Relabel metrics
+  metricRelabelings: null
+  # -- Relalabel
+  relabelings: null

@@ -15,6 +15,7 @@ chart-repos:
   - kubernetes-dashboard=https://kubernetes.github.io/dashboard
   - komodorio=https://helm-charts.komodor.io
   - aqua=https://aquasecurity.github.io/helm-charts
+  - moonswitch=https://charts.moonswitch.com
 helm-extra-args: --timeout 600s
 validate-maintainers: false
 namespace: moonswitch

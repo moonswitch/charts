@@ -3,8 +3,8 @@ dependencies:
   repository: https://charts.releases.teleport.dev
   version: 14.3.0
 - name: cloudflare-tunnel-remote
-  repository: https://cloudflare.github.io/helm-charts
-  version: 0.1.1
+  repository: https://charts.moonswitch.com
+  version: 0.1.4
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 55.5.1
@@ -35,5 +35,5 @@ dependencies:
 - name: trivy-operator
   repository: https://aquasecurity.github.io/helm-charts
   version: 0.20.1
-digest: sha256:83b5c8dcd3c4c90fd52c4fe1ce10243295cd9088b82a3cd4eed9848fb0e8c5b3
-generated: "2024-01-09T15:27:07.8434-06:00"
+digest: sha256:eb12e11a30cdee79bf12c1d29e5bdcbff307339c0240d43a1045516e16f6e575
+generated: "2024-01-10T11:41:01.746211-06:00"

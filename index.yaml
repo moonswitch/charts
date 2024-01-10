@@ -3,6 +3,18 @@ entries:
   cloudflare-tunnel-remote:
   - apiVersion: v2
     appVersion: latest
+    created: "2024-01-10T17:34:27.587117473Z"
+    description: Deployment of a remotely managed tunnel that has already been provisioned
+      in Cloudflare
+    digest: 2388752bd16775a433e46e3ae098ab303d20ffd9e8e466e97960b598916d3e47
+    icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
+    name: cloudflare-tunnel-remote
+    type: application
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/cloudflare-tunnel-remote-0.1.4/cloudflare-tunnel-remote-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: latest
     created: "2024-01-10T17:05:15.998490308Z"
     description: Deployment of a remotely managed tunnel that has already been provisioned
       in Cloudflare
@@ -578,4 +590,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-10T17:05:15.998524672Z"
+generated: "2024-01-10T17:34:27.587154732Z"

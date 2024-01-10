@@ -8,7 +8,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      pod: cloudflared
+      {{- include "cloudflare-tunnel-remote.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       creationTimestamp: null
@@ -19,7 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        pod: cloudflared
+        {{- include "cloudflare-tunnel-remote.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

@@ -1,5 +1,18 @@
 apiVersion: v1
 entries:
+  cloudflare-tunnel-remote:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2024-01-10T15:12:25.366829749Z"
+    description: Deployment of a remotely managed tunnel that has already been provisioned
+      in Cloudflare
+    digest: 23ea733bdabb0cba6f28eac799acf9629fb8c0426e893c514701e20534d2a01e
+    icon: https://developers.cloudflare.com/cloudflare-one/favicon-32x32.png
+    name: cloudflare-tunnel-remote
+    type: application
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/cloudflare-tunnel-remote-0.1.2/cloudflare-tunnel-remote-0.1.2.tgz
+    version: 0.1.2
   moonswitch-agent:
   - annotations:
       artifacthub.io/signKey: |
@@ -553,4 +566,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2024-01-10T13:44:46.851037066Z"
+generated: "2024-01-10T15:12:25.366865155Z"

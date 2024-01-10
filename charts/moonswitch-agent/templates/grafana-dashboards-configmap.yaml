@@ -7,4 +7,4 @@ metadata:
     grafana_dashboard: "1"
     {{- include "moonswitch-agent.labels" . | nindent 4 }}
 data:
-{{ (tpl (.Files.Glob "grafana_dashboards/*.json").AsConfig .) | indent 2 }}
+{{ (.Files.Glob "grafana_dashboards/*.json").AsConfig | indent 2 }}

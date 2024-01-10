@@ -1,0 +1,43 @@
+{{ $weave_gitops := index .Values "weave-gitops" }}
+{{- if and $weave_gitops.enabled $weave_gitops.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "moonswitch-agent.fullname" . }}-weave-gitops
+  labels:
+    {{- include "moonswitch-agent.labels" . | nindent 4 }}
+    {{- with $weave_gitops.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  jobLabel: {{ template "moonswitch-agent.fullname" . }}-weave-gitops
+  endpoints:
+  - port: http-metrics
+    {{- if $weave_gitops.metrics.serviceMonitor.path }}
+    path: {{ $weave_gitops.metrics.serviceMonitor.path }}
+    {{- end }}
+    {{- if $weave_gitops.metrics.serviceMonitor.interval }}
+    interval: {{ $weave_gitops.metrics.serviceMonitor.interval }}
+    {{- end }}
+    {{- if $weave_gitops.metrics.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ $weave_gitops.metrics.serviceMonitor.scrapeTimeout }}
+    {{- end }}
+    {{- if $weave_gitops.metrics.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+    {{ toYaml $weave_gitops.metrics.serviceMonitor.metricRelabelings | indent 4 }}
+    {{- end }}
+    {{- if $weave_gitops.metrics.serviceMonitor.relabelings }}
+    relabelings:
+    {{ toYaml $weave_gitops.metrics.serviceMonitor.relabelings | indent 4 }}
+    {{- end }}
+    {{- if $weave_gitops.metrics.serviceMonitor.honorLabels }}
+    honorLabels: true
+    {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: weave-gitops
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+{{- end }}

@@ -202,7 +202,19 @@ weave-gitops:
   metrics:
     enabled: true
     annotations: {}
-    # TODO: Write our own ServiceMonitor for this :2112/metrics
+    serviceMonitor:
+      enabled: true
+      # -- Interval at which endpoints should be scraped.
+      interval: 30s
+      # -- Add custom labels to the ServiceMonitor resource
+      additionalLabels:
+        monitored-by: moonswitch-agent
+      # -- Chooses the metric’s labels on collisions with target labels.
+      honorLabels: false
+      # -- Path to scrape metrics
+      path: /metrics
+      # -- Timeout for scrape metrics request
+      scrapeTimeout: 10s
   resources:
     requests:
       cpu: 10m

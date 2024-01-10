@@ -12,6 +12,10 @@ teleport-kube-agent:
       enabled: true
       minAvailable: 1
   roles: kube
+  podMonitor:
+    enabled: true
+    additionalLabels:
+      monitored-by: moonswitch-agent
   joinParams:
     method: "token"
     tokenName:
@@ -41,6 +45,7 @@ teleport-kube-agent:
 
 cloudflare-tunnel-remote:
   enabled: true
+  # TODO: write our own servicemonitor for this :2000/metrics
 
 kube-prometheus-stack:
   enabled: true
@@ -48,6 +53,9 @@ kube-prometheus-stack:
     "moonswitch.io/app": moonswitch-agent
 
   alertmanager:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
     alertmanagerSpec:
       storage:
         volumeClaimTemplate:
@@ -55,8 +63,15 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 40Gi
+      alertmanagerConfigSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
+
 
   grafana:
+    serviceMonitor:
+      labels:
+        monitored-by: moonswitch-agent
     defaultDashboardsTimezone: browser
     persistence:
       enabled: true
@@ -84,7 +99,59 @@ kube-prometheus-stack:
 
   cleanPrometheusOperatorObjectNames: true
 
+  defaultRules:
+    labels:
+      monitored-by: moonswitch-agent
+
+  kubeApiServer:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubelet:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubeControllerManager:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  coreDns:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubeDns:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubeEtcd:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubeScheduler:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  kubeProxy:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
+  prometheusOperator:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
+
   prometheus:
+    serviceMonitor:
+      additionalLabels:
+        monitored-by: moonswitch-agent
     prometheusSpec:
       storageSpec:
         volumeClaimTemplate:
@@ -92,26 +159,21 @@ kube-prometheus-stack:
             resources:
               requests:
                 storage: 100Gi
-      additionalScrapeConfigs:
-        - job_name: kubecost
-          honor_labels: true
-          scrape_interval: 1m
-          scrape_timeout: 60s
-          metrics_path: /metrics
-          scheme: http
-          dns_sd_configs:
-          - names:
-            - moonswitch-agent-cost-analyzer
-            type: 'A'
-            port: 9003
-        - job_name: kubecost-networking
-          kubernetes_sd_configs:
-            - role: pod
-          relabel_configs:
-          # These will need to be updated when we update the chart version past 1.106.x
-            - source_labels: [__meta_kubernetes_pod_label_app]
-              action: keep
-              regex: moonswitch-agent-network-costs
+      ruleSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
+      serviceMonitorSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
+      podMonitorSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
+      probeSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
+      scrapeConfigSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
 
   prometheus-node-exporter:
     affinity:
@@ -124,39 +186,11 @@ kube-prometheus-stack:
                 values:
                   - fargate
 
-  additionalPrometheusRulesMap:
-    kubecost:
-      groups:
-        - name: CPU
-          rules:
-            - expr: sum(rate(container_cpu_usage_seconds_total{container!=""}[5m]))
-              record: cluster:cpu_usage:rate5m
-            - expr: rate(container_cpu_usage_seconds_total{container!=""}[5m])
-              record: cluster:cpu_usage_nosum:rate5m
-            - expr: avg(irate(container_cpu_usage_seconds_total{container!="POD", container!=""}[5m])) by (container,pod,namespace)
-              record: kubecost_container_cpu_usage_irate
-            - expr: sum(container_memory_working_set_bytes{container!="POD",container!=""}) by (container,pod,namespace)
-              record: kubecost_container_memory_working_set_bytes
-            - expr: sum(container_memory_working_set_bytes{container!="POD",container!=""})
-              record: kubecost_cluster_memory_working_set_bytes
-        - name: Savings
-          rules:
-            - expr: sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod))
-              record: kubecost_savings_cpu_allocation
-              labels:
-                daemonset: "false"
-            - expr: sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_cpu_allocation) by (pod)) / sum(kube_node_info)
-              record: kubecost_savings_cpu_allocation
-              labels:
-                daemonset: "true"
-            - expr: sum(avg(kube_pod_owner{owner_kind!="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod))
-              record: kubecost_savings_memory_allocation_bytes
-              labels:
-                daemonset: "false"
-            - expr: sum(avg(kube_pod_owner{owner_kind="DaemonSet"}) by (pod) * sum(container_memory_allocation_bytes) by (pod)) / sum(kube_node_info)
-              record: kubecost_savings_memory_allocation_bytes
-              labels:
-                daemonset: "true"
+  kube-state-metrics:
+    prometheus:
+      monitor:
+        additionalLabels:
+          monitored-by: moonswitch-agent
 
 weave-gitops:
   enabled: true
@@ -165,6 +199,29 @@ weave-gitops:
     "moonswitch.io/app": moonswitch-agent
   additionalArgs:
     - --insecure-no-authentication-user=gitops-dashboard-user
+  metrics:
+    enabled: true
+    annotations: {}
+    serviceMonitor:
+      enabled: true
+      # -- Interval at which endpoints should be scraped.
+      interval: 30s
+      # -- Add custom labels to the ServiceMonitor resource
+      additionalLabels:
+        monitored-by: moonswitch-agent
+      # -- Chooses the metric’s labels on collisions with target labels.
+      honorLabels: false
+      # -- Path to scrape metrics
+      path: /metrics
+      # -- Timeout for scrape metrics request
+      scrapeTimeout: 10s
+  resources:
+    requests:
+      cpu: 10m
+      memory: 100M
+    limits:
+      cpu: 10m
+      memory: 100M
 
 cost-analyzer:
   enabled: true
@@ -208,12 +265,26 @@ cost-analyzer:
       enabled: false
     kube-state-metrics:
       disabled: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      monitored-by: moonswitch-agent
+    networkCosts:
+      enabled: true
+      additionalLabels:
+        monitored-by: moonswitch-agent
+  prometheusRule:
+    enabled: true
+    additionalLabels:
+      monitored-by: moonswitch-agent
   kubecostMetrics:
     emitKsmV1Metrics: false
     emitKsmV1MetricsOnly: true
     exporter:
       serviceMonitor:
         enabled: true
+        additionalLabels:
+          monitored-by: moonswitch-agent
   kubecostModel:
     image: "public.ecr.aws/kubecost/cost-model"
     outOfClusterPromMetricsEnabled: false
@@ -234,6 +305,10 @@ cost-analyzer:
     config:
       services:
         amazon-web-services: true
+    podMonitor:
+      enabled: true
+      additionalLabels:
+        monitored-by: moonswitch-agent
 
 nginx:
   enabled: true
@@ -244,6 +319,12 @@ nginx:
   staticSiteConfigmap: nginx-static-site
   service:
     type: ClusterIP
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      labels:
+        monitored-by: moonswitch-agent
 
 loki:
   enabled: true
@@ -269,6 +350,13 @@ loki:
         installOperator: false
     serviceMonitor:
       enabled: true
+      labels:
+        monitored-by: moonswitch-agent
+      metricsInstance:
+        enabled: false
+    rules:
+      labels:
+        monitored-by: moonswitch-agent
 
 promtail:
   enabled: true
@@ -285,8 +373,12 @@ promtail:
             expression: "(default)"  # Use this to drop logs from client app namespaces e.g "(default|client-app1|cool-app-namespace)"
   serviceMonitor:
     enabled: true
+    labels:
+      monitored-by: moonswitch-agent
     prometheusRule:
       enabled: true
+      additionalLabels:
+        monitored-by: moonswitch-agent
       rules:
         - alert: PromtailRequestErrors
           expr: 100 * sum(rate(promtail_request_duration_seconds_count{status_code=~"5..|failed"}[1m])) by (namespace, job, route, instance) / sum(rate(promtail_request_duration_seconds_count[1m])) by (namespace, job, route, instance) > 10
@@ -360,6 +452,10 @@ kubernetes-dashboard:
     "moonswitch.io/app": moonswitch-agent
   serviceAccount:
     name: moonswitch-agent-kubernetes-dashboard
+  serviceMonitor:
+    enabled: true
+    labels:
+      monitored-by: moonswitch-agent
 
 helm-dashboard:
   enabled: true
@@ -374,6 +470,8 @@ trivy-operator:
     builtInTrivyServer: true
   serviceMonitor:
     enabled: true
+    labels:
+      monitored-by: moonswitch-agent
   trivy:
     resources:
       requests:

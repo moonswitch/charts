@@ -53,6 +53,7 @@ jobs:
           helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard
           helm repo add komodorio https://helm-charts.komodor.io
           helm repo add aqua https://aquasecurity.github.io/helm-charts
+          helm repo add moonswitch https://charts.moonswitch.com
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@a917fd15b20e8b64b94d9158ad54cd6345335584 # v1.6.0

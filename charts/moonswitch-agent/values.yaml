@@ -45,7 +45,11 @@ teleport-kube-agent:
 
 cloudflare-tunnel-remote:
   enabled: true
-  # TODO: write our own servicemonitor for this :2000/metrics
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      monitored-by: moonswitch-agent
+
 
 kube-prometheus-stack:
   enabled: true

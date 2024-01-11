@@ -1,0 +1,48 @@
+{{ $kube_prom_stack := index .Values "kube-prometheus-stack" }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ template "moonswitch-agent.fullname" . }}-flux-rules
+  labels:
+    {{- include "moonswitch-agent.labels" . | nindent 4 }}
+    monitored-by: moonswitch-agent
+spec:
+  groups:
+  - name: flux-rules
+    rules:
+    - alert: FluxKustomizationFailing
+      annotations:
+        description: Flux Kustomization {{`{{`}} $labels.name {{`}}`}} in namespace {{`{{`}} $labels.namespace {{`}}`}} failed.
+        runbook_url: {{ $kube_prom_stack.defaultRules.runbookUrl }}/{{ .Template.Name }}
+        summary: Errors while reconcile Flux Kustomization(s)
+      expr: gotk_resource_info{customresource_kind=~"Kustomization", ready="False"}
+      for: 5m
+      labels:
+        severity: warning
+    - alert: FluxHelmReleaseFailing
+      annotations:
+        description: Flux HelmRelease {{`{{`}} $labels.name {{`}}`}} in namespace {{`{{`}} $labels.namespace {{`}}`}} failed.
+        runbook_url: {{ $kube_prom_stack.defaultRules.runbookUrl }}/{{ .Template.Name }}
+        summary: Errors while reconcile Flux HelmRelease(s)
+      expr: gotk_resource_info{customresource_kind=~"HelmRelease", ready="False"}
+      for: 5m
+      labels:
+        severity: warning
+    - alert: FluxSourceFailing
+      annotations:
+        description: Flux Source {{`{{`}} $labels.name {{`}}`}} in namespace {{`{{`}} $labels.namespace {{`}}`}} failed.
+        runbook_url: {{ $kube_prom_stack.defaultRules.runbookUrl }}/{{ .Template.Name }}
+        summary: Errors while reconcile Flux Source(s)
+      expr: gotk_resource_info{customresource_kind=~"GitRepository|HelmRepository|Bucket|OCIRepository", ready="False"}
+      for: 5m
+      labels:
+        severity: warning
+    - alert: FluxResourceSuspended
+      annotations:
+        description: Flux Resource {{`{{`}} $labels.name {{`}}`}} in namespace {{`{{`}} $labels.namespace {{`}}`}} suspended.
+        runbook_url: {{ $kube_prom_stack.defaultRules.runbookUrl }}/{{ .Template.Name }}
+        summary: Flux Resource(s) are suspended for an extended period of time.
+      expr: gotk_resource_info{suspended="true"}
+      for: 2h
+      labels:
+        severity: none

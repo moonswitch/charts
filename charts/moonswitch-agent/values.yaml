@@ -104,6 +104,7 @@ kube-prometheus-stack:
   cleanPrometheusOperatorObjectNames: true
 
   defaultRules:
+    runbookUrl: "https://runbooks.prometheus-operator.dev/runbooks"
     labels:
       monitored-by: moonswitch-agent
 

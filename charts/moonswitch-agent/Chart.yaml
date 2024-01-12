@@ -6,7 +6,7 @@ icon: https://static.moonswitch.com/logos/color/icon.svg
 sources:
   - https://github.com/moonswitch/charts
 
-version: 0.12.0
+version: 0.12.1
 
 dependencies:
   - name: teleport-kube-agent

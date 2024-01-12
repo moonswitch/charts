@@ -568,10 +568,10 @@ cost-analyzer:
     resources:
       requests:
         cpu: "200m"
-        memory: "55Mi"
+        memory: "128Mi"
       limits:
         cpu: "800m"
-        memory: "256Mi"
+        memory: "1536Mi"
   networkCosts:
     enabled: true
     image: "public.ecr.aws/kubecost/kubecost-network-costs:v0.17.2"

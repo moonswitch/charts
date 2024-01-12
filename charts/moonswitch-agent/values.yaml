@@ -490,11 +490,11 @@ weave-gitops:
       scrapeTimeout: 10s
   resources:
     requests:
-      cpu: 10m
-      memory: 100M
+      cpu: 50m
+      memory: 128M
     limits:
-      cpu: 10m
-      memory: 100M
+      cpu: 50m
+      memory: 128M
 
 cost-analyzer:
   enabled: true

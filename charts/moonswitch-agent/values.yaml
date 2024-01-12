@@ -746,6 +746,8 @@ trivy-operator:
     labels:
       monitored-by: moonswitch-agent
   trivy:
+    severity: HIGH,CRITICAL
+    ignoreUnfixed: true
     resources:
       requests:
         cpu: 100m

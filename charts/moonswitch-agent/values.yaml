@@ -158,6 +158,7 @@ kube-prometheus-stack:
       additionalLabels:
         monitored-by: moonswitch-agent
     prometheusSpec:
+      scrapeInterval: 60s
       storageSpec:
         volumeClaimTemplate:
           spec:

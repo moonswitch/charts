@@ -1,7 +1,7 @@
 clusterName:
 clientName:
 cloudflareTunnelToken:
-
+teleportJoinToken:
 
 nameOverride: ""
 fullnameOverride: ""
@@ -21,8 +21,11 @@ teleport-kube-agent:
     additionalLabels:
       monitored-by: moonswitch-agent
   joinParams:
-    method: "token"
+    method: token
     tokenName:
+  joinTokenSecret:
+    create: false
+    name: cluster-info
   extraLabels:
     clusterRole:
       "moonswitch.io/app": moonswitch-agent

@@ -1,5 +1,7 @@
 clusterName:
 clientName:
+cloudflareTunnelToken:
+
 
 nameOverride: ""
 fullnameOverride: ""
@@ -51,6 +53,9 @@ cloudflare-tunnel-remote:
     enabled: true
     additionalLabels:
       monitored-by: moonswitch-agent
+  cloudflare:
+    secretName: cluster-info
+    secretKey: "tunnelToken"
 
 
 kube-prometheus-stack:

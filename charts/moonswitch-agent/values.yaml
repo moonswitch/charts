@@ -1,6 +1,8 @@
+clusterName:
+clientName:
+
 nameOverride: ""
 fullnameOverride: ""
-clusterName:
 
 teleport-kube-agent:
   enabled: true
@@ -158,6 +160,37 @@ kube-prometheus-stack:
       additionalLabels:
         monitored-by: moonswitch-agent
     prometheusSpec:
+      enableFeatures:
+        - expand-external-labels
+      externalLabels:
+        cluster_name: $(CLUSTER_NAME)
+        client_name: $(CLIENT_NAME)
+      initContainers:
+        - name: init-config-reloader
+          env:
+            - name: CLUSTER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-info
+                  key: CLUSTER_NAME
+            - name: CLIENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-info
+                  key: CLIENT_NAME
+      containers:
+        - name: config-reloader
+          env:
+            - name: CLUSTER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-info
+                  key: CLUSTER_NAME
+            - name: CLIENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: cluster-info
+                  key: CLIENT_NAME
       scrapeInterval: 60s
       storageSpec:
         volumeClaimTemplate:

@@ -47,7 +47,7 @@ jobs:
       - name: Fetch Teleport binaries
         uses: teleport-actions/setup@v1
         with:
-          version: 14.2.3
+          version: 16.4.7
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Fetch credentials using Machine ID

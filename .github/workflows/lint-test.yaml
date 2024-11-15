@@ -54,7 +54,7 @@ jobs:
         id: auth
         uses: teleport-actions/auth@v2
         with:
-          proxy: teleport.prd.moonswitch.io:443
+          proxy: teleport.moonswitch.io:443
           token: moonswitch-automation
         if: steps.list-changed.outputs.changed == 'true'
 

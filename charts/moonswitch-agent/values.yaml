@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 teleport-kube-agent:
   enabled: true
-  proxyAddr: teleport.prd.moonswitch.io:443
+  proxyAddr: teleport.moonswitch.io:443
   highAvailability:
     replicaCount: 3
     requireAntiAffinity: true

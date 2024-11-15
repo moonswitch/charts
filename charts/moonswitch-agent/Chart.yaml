@@ -21,10 +21,6 @@ dependencies:
     repository: https://prometheus-community.github.io/helm-charts
     condition: kube-prometheus-stack.enabled
     version: 55.5.1
-  - name: weave-gitops
-    repository: https://helm.gitops.weave.works
-    condition: weave-gitops.enabled
-    version: 4.0.36
   - name: cost-analyzer
     repository: https://kubecost.github.io/cost-analyzer
     condition: cost-analyzer.enabled

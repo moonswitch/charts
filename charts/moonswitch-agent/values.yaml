@@ -509,37 +509,6 @@ kube-prometheus-stack:
                     suspended: [spec, suspend]
                     source_name: [spec, sourceRef, name]
 
-weave-gitops:
-  enabled: true
-  replicaCount: 1
-  podLabels:
-    "moonswitch.io/app": moonswitch-agent
-  additionalArgs:
-    - --insecure-no-authentication-user=gitops-dashboard-user
-  metrics:
-    enabled: true
-    annotations: {}
-    serviceMonitor:
-      enabled: true
-      # -- Interval at which endpoints should be scraped.
-      interval: 30s
-      # -- Add custom labels to the ServiceMonitor resource
-      additionalLabels:
-        monitored-by: moonswitch-agent
-      # -- Chooses the metric’s labels on collisions with target labels.
-      honorLabels: false
-      # -- Path to scrape metrics
-      path: /metrics
-      # -- Timeout for scrape metrics request
-      scrapeTimeout: 10s
-  resources:
-    requests:
-      cpu: 50m
-      memory: 128M
-    limits:
-      cpu: 50m
-      memory: 128M
-
 cost-analyzer:
   enabled: true
   global:

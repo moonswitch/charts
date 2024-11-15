@@ -510,7 +510,7 @@ kube-prometheus-stack:
                     source_name: [spec, sourceRef, name]
 
 cost-analyzer:
-  enabled: true
+  enabled: false
   global:
     prometheus:
       enabled: false
@@ -613,7 +613,7 @@ nginx:
         monitored-by: moonswitch-agent
 
 loki:
-  enabled: true
+  enabled: false
   loki:
     auth_enabled: false
     commonConfig:
@@ -645,7 +645,7 @@ loki:
         monitored-by: moonswitch-agent
 
 promtail:
-  enabled: true
+  enabled: false
   daemonset:
     autoscaling:
       enabled: true
@@ -744,14 +744,14 @@ kubernetes-dashboard:
       monitored-by: moonswitch-agent
 
 helm-dashboard:
-  enabled: true
+  enabled: false
   extraArgs:
     - --no-analytics
     - --no-browser
     - --bind=0.0.0.0
 
 trivy-operator:
-  enabled: true
+  enabled: false
   operator:
     builtInTrivyServer: true
   serviceMonitor:

@@ -1,16 +1,13 @@
 dependencies:
 - name: teleport-kube-agent
   repository: https://charts.releases.teleport.dev
-  version: 14.3.0
+  version: 16.4.7
 - name: cloudflare-tunnel-remote
   repository: https://charts.moonswitch.com
   version: 0.1.4
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 55.5.1
-- name: weave-gitops
-  repository: https://helm.gitops.weave.works
-  version: 4.0.36
 - name: cost-analyzer
   repository: https://kubecost.github.io/cost-analyzer
   version: 1.106.5
@@ -35,5 +32,5 @@ dependencies:
 - name: trivy-operator
   repository: https://aquasecurity.github.io/helm-charts
   version: 0.20.1
-digest: sha256:eb12e11a30cdee79bf12c1d29e5bdcbff307339c0240d43a1045516e16f6e575
-generated: "2024-01-10T11:41:01.746211-06:00"
+digest: sha256:3ae700a851f5a241ac0ebe5349b6eeb819b20240c7afa2826bd3b50a2923959e
+generated: "2024-11-15T11:11:27.222321-08:00"

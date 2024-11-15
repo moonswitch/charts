@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 teleport-kube-agent:
   enabled: true
-  proxyAddr: teleport.prd.moonswitch.io:443
+  proxyAddr: teleport.moonswitch.io:443
   highAvailability:
     replicaCount: 3
     requireAntiAffinity: true
@@ -509,39 +509,8 @@ kube-prometheus-stack:
                     suspended: [spec, suspend]
                     source_name: [spec, sourceRef, name]
 
-weave-gitops:
-  enabled: true
-  replicaCount: 1
-  podLabels:
-    "moonswitch.io/app": moonswitch-agent
-  additionalArgs:
-    - --insecure-no-authentication-user=gitops-dashboard-user
-  metrics:
-    enabled: true
-    annotations: {}
-    serviceMonitor:
-      enabled: true
-      # -- Interval at which endpoints should be scraped.
-      interval: 30s
-      # -- Add custom labels to the ServiceMonitor resource
-      additionalLabels:
-        monitored-by: moonswitch-agent
-      # -- Chooses the metric’s labels on collisions with target labels.
-      honorLabels: false
-      # -- Path to scrape metrics
-      path: /metrics
-      # -- Timeout for scrape metrics request
-      scrapeTimeout: 10s
-  resources:
-    requests:
-      cpu: 50m
-      memory: 128M
-    limits:
-      cpu: 50m
-      memory: 128M
-
 cost-analyzer:
-  enabled: true
+  enabled: false
   global:
     prometheus:
       enabled: false
@@ -644,7 +613,7 @@ nginx:
         monitored-by: moonswitch-agent
 
 loki:
-  enabled: true
+  enabled: false
   loki:
     auth_enabled: false
     commonConfig:
@@ -676,7 +645,7 @@ loki:
         monitored-by: moonswitch-agent
 
 promtail:
-  enabled: true
+  enabled: false
   daemonset:
     autoscaling:
       enabled: true
@@ -775,14 +744,14 @@ kubernetes-dashboard:
       monitored-by: moonswitch-agent
 
 helm-dashboard:
-  enabled: true
+  enabled: false
   extraArgs:
     - --no-analytics
     - --no-browser
     - --bind=0.0.0.0
 
 trivy-operator:
-  enabled: true
+  enabled: false
   operator:
     builtInTrivyServer: true
   serviceMonitor:

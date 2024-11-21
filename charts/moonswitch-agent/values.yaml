@@ -170,6 +170,9 @@ kube-prometheus-stack:
       additionalLabels:
         monitored-by: moonswitch-agent
     prometheusSpec:
+      ruleSelector:
+        matchLabels:
+          monitored-by: moonswitch-agent
       enableFeatures:
         - expand-external-labels
       externalLabels:

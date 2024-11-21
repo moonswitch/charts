@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-alerts
+  namespace: moonswitch
+  labels:
+    monitored-by: moonswitch-agent
+
+# RULE DEFINITIONS
+# - Host High CPU Load
+# - Host Out of Memory
+# - High Disk I/O Time
+# - Instance Down
+
+spec:
+  groups:
+    - name: Compute
+      rules:
+        - alert: HostHighCpuLoad
+          expr: (sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host high CPU load (instance {{ $labels.instance }})
+            description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: HostOutOfMemory
+          expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host out of memory (instance {{ $labels.instance }})
+            description: "Node memory is filling up (< 10% left)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: HostHighDiskIOTime
+          expr: rate(node_disk_io_time_seconds_total[1m]) > 0.9
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Host high disk I/O time (instance {{ $labels.instance }})"
+            description: "Disk I/O time is high (> 90%)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+

@@ -1,0 +1,65 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-alerts
+  namespace: moonswitch
+  labels:
+    monitored-by: moonswitch-agent
+
+# RULE DEFINITIONS
+# - Node Not Ready
+# - Pods Not Healthy
+# - Pod High Memory Usage
+# - Pod High CPU Usage
+# - Cluster High Memory Usage
+# - Cluster High CPU Usage
+
+
+spec:
+  groups:
+    - name: Kubernetes
+      rules:
+        - alert: KubernetesNodeNotReady
+          expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            summary: Kubernetes Node not ready (instance {{ $labels.instance }})
+            description: "Node {{ $labels.node }} has been unready for a long time\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: Kubernetes Pod(s) not Healthy
+          expr: sum by (namespace, pod) (kube_pod_status_phase{phase="Pending"}) > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            summary: Kubernetes Pod not healthy (instance {{ $labels.instance }})
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has been in a non-running state for longer than 15 minutes.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: KubernetesPodHighMemoryUsage
+          expr: sum by (pod, namespace) (container_memory_usage_bytes{container!="", pod!=""}) / sum by (pod, namespace) (kube_pod_container_resource_limits_memory_bytes{container!="", pod!=""}) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using high memory"
+            description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using more than 90% of its memory limit."
+
+        - alert: KubernetesPodHighCPUUsage
+          expr: sum by (pod, namespace) (rate(container_cpu_usage_seconds_total{container!="", pod!=""}[5m])) / sum by (pod, namespace) (kube_pod_container_resource_limits_cpu_cores{container!="", pod!=""}) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using high CPU"
+            description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is using more than 90% of its CPU limit."
+
+        - alert: KubernetesClusterMemoryUsage
+        expr: sum(kube_node_status_allocatable_memory_bytes) - sum(kube_pod_container_resource_requests_memory_bytes) < 0.1 * sum(kube_node_status_allocatable_memory_bytes)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cluster memory usage is high"
+          description: "Less than 10% of cluster memory is available."

@@ -1,0 +1,43 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: custom-alerts
+  namespace: moonswitch
+  labels:
+    monitored-by: moonswitch-agent
+
+# RULE DEFINITIONS
+# - Host Network Interface Saturated
+# - Host Unusual Network Throughput In
+# - Host Unusual Network Throughput Out
+
+spec:
+  groups:
+    - name: Network
+      rules:
+        - alert: HostNetworkInterfaceSaturated
+          expr: ((rate(node_network_receive_bytes_total{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"}[1m]) + rate(node_network_transmit_bytes_total{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"}[1m])) / node_network_speed_bytes{device!~"^tap.*|^vnet.*|^veth.*|^tun.*"} > 0.8 < 10000) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host Network Interface Saturated (instance {{ $labels.instance }})
+            description: "The network interface \"{{ $labels.device }}\" on \"{{ $labels.instance }}\" is getting overloaded.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: HostUnusualNetworkThroughputIn
+          expr: (sum by (instance) (rate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host unusual network throughput in (instance {{ $labels.instance }})
+            description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: HostUnusualNetworkThroughputOut
+          expr: (sum by (instance) (rate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host unusual network throughput out (instance {{ $labels.instance }})
+            description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"

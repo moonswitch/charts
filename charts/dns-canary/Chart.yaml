@@ -1,0 +1,6 @@
+apiVersion: v2
+name: dns-canary
+description: A Helm chart to deploy DNS Canary CronJob for Kubernetes clusters
+type: application
+version: 1.0.0
+appVersion: 1.0.0

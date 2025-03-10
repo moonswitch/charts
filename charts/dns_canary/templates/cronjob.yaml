@@ -21,11 +21,19 @@ spec:
           labels:
             app: {{ .Values.name }}
         spec:
-          restartPolicy: OnFailure
+          {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          serviceAccountName: {{ include "dns-canary.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 8 }}
           containers:
-            - name: dns-canary
-              image: amazon/aws-cli
-              imagePullPolicy: Always
+            - name: {{ .Chart.Name }}
+              securityContext:
+                {{- toYaml .Values.securityContext | nindent 12 }}
+              image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
               command:
                 - /bin/sh
                 - -c
@@ -53,4 +61,35 @@ spec:
                         --message "DNS Canary failure detected for $TARGET in cluster {{ .Values.clusterName }}"
                     fi
                   fi
+              ports:
+                - name: http
+                  containerPort: {{ .Values.service.port }}
+                  protocol: TCP
+              livenessProbe:
+                {{- toYaml .Values.livenessProbe | nindent 12 }}
+              readinessProbe:
+                {{- toYaml .Values.readinessProbe | nindent 12 }}
+              resources:
+                {{- toYaml .Values.resources | nindent 12 }}
+              {{- with .Values.volumeMounts }}
+              volumeMounts:
+                {{- toYaml . | nindent 12 }}
+              {{- end }}
+          {{- with .Values.volumes }}
+          volumes:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
               resources: {}
+              

@@ -23,15 +23,15 @@ spec:
         spec:
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           serviceAccountName: {{ include "dns-canary.serviceAccountName" . }}
           securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 8 }}
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
           containers:
             - name: {{ .Chart.Name }}
               securityContext:
-                {{- toYaml .Values.securityContext | nindent 12 }}
+                {{- toYaml .Values.securityContext | nindent 16 }}
               image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
               imagePullPolicy: {{ .Values.image.pullPolicy }}
               command:
@@ -46,19 +46,19 @@ spec:
                   else
                     echo "$(date) DNS Canary check failed for $TARGET" >&2
 
-                    if [ -n "{{ .Values.cloudwatchLogGroup }}" ]; then
+                    if [ -n "{{`{{ .Values.cloudwatchLogGroup }}`}}" ]; then
                       echo "Sending failure log to CloudWatch"
                       aws logs put-log-events \
-                        --log-group-name "{{ .Values.cloudwatchLogGroup }}" \
-                        --log-stream-name "dns-canary-{{ .Values.name }}" \
+                        --log-group-name "{{`{{ .Values.cloudwatchLogGroup }}`}}" \
+                        --log-stream-name "dns-canary-{{`{{ .Values.name }}`}}" \
                         --log-events "timestamp=$(date +%s%3N),message=\"DNS Canary failure: $TARGET\""
                     fi
 
-                    if [ -n "{{ .Values.alertSnsTopicArn }}" ]; then
+                    if [ -n "{{`{{ .Values.alertSnsTopicArn }}`}}" ]; then
                       echo "Triggering SNS alert"
                       aws sns publish \
-                        --topic-arn "{{ .Values.alertSnsTopicArn }}" \
-                        --message "DNS Canary failure detected for $TARGET in cluster {{ .Values.clusterName }}"
+                        --topic-arn "{{`{{ .Values.alertSnsTopicArn }}`}}" \
+                        --message "DNS Canary failure detected for $TARGET in cluster {{`{{ .Values.clusterName }}`}}"
                     fi
                   fi
               ports:
@@ -66,30 +66,28 @@ spec:
                   containerPort: {{ .Values.service.port }}
                   protocol: TCP
               livenessProbe:
-                {{- toYaml .Values.livenessProbe | nindent 12 }}
+                {{- toYaml .Values.livenessProbe | nindent 16 }}
               readinessProbe:
-                {{- toYaml .Values.readinessProbe | nindent 12 }}
+                {{- toYaml .Values.readinessProbe | nindent 16 }}
               resources:
-                {{- toYaml .Values.resources | nindent 12 }}
+                {{- toYaml .Values.resources | nindent 16 }}
               {{- with .Values.volumeMounts }}
               volumeMounts:
-                {{- toYaml . | nindent 12 }}
+                {{- toYaml . | nindent 16 }}
               {{- end }}
           {{- with .Values.volumes }}
           volumes:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.nodeSelector }}
           nodeSelector:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.affinity }}
           affinity:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .Values.tolerations }}
           tolerations:
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-              resources: {}
-              

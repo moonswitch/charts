@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ .Values.name }}
-  namespace: {{ .Values.namespace }}
+  name: {{ include "dns-canary.fullname" . }}
   labels:
+    {{- include "dns-canary.labels" . | nindent 4 }}
     app: {{ .Values.name }}
 spec:
   schedule: {{ .Values.schedule | quote }}
@@ -19,8 +19,10 @@ spec:
       template:
         metadata:
           labels:
+            {{- include "dns-canary.selectorLabels" . | nindent 12 }}
             app: {{ .Values.name }}
         spec:
+          restartPolicy: OnFailure
           {{- with .Values.imagePullSecrets }}
           imagePullSecrets:
             {{- toYaml . | nindent 12 }}
@@ -39,9 +41,10 @@ spec:
                 - -c
                 - |
                   set -e
-                  TARGET="http://{{ .Values.targetService }}"
+                  TARGET="{{ .Values.targetService }}"
+                  echo "$(date) Checking DNS resolution for $TARGET"
 
-                  if curl --max-time 3 -sSf $TARGET; then
+                  if nslookup $TARGET; then
                     echo "$(date) DNS Canary check passed for $TARGET"
                   else
                     echo "$(date) DNS Canary check failed for $TARGET" >&2
@@ -61,14 +64,6 @@ spec:
                         --message "DNS Canary failure detected for $TARGET in cluster {{`{{ .Values.clusterName }}`}}"
                     fi
                   fi
-              ports:
-                - name: http
-                  containerPort: {{ .Values.service.port }}
-                  protocol: TCP
-              livenessProbe:
-                {{- toYaml .Values.livenessProbe | nindent 16 }}
-              readinessProbe:
-                {{- toYaml .Values.readinessProbe | nindent 16 }}
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
               {{- with .Values.volumeMounts }}

@@ -2,3 +2,4 @@
 /charts/*/charts
 .idea
 test.yaml
+.DS_Store

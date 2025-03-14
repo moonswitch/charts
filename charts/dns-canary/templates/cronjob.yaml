@@ -4,7 +4,6 @@ metadata:
   name: {{ include "dns-canary.fullname" . }}
   labels:
     {{- include "dns-canary.labels" . | nindent 4 }}
-    app: {{ .Values.name }}
 spec:
   schedule: {{ .Values.schedule | quote }}
   concurrencyPolicy: Allow
@@ -20,7 +19,6 @@ spec:
         metadata:
           labels:
             {{- include "dns-canary.selectorLabels" . | nindent 12 }}
-            app: {{ .Values.name }}
         spec:
           restartPolicy: OnFailure
           {{- with .Values.imagePullSecrets }}
@@ -47,22 +45,7 @@ spec:
                   if nslookup $TARGET; then
                     echo "$(date) DNS Canary check passed for $TARGET"
                   else
-                    echo "$(date) DNS Canary check failed for $TARGET" >&2
-
-                    if [ -n "{{`{{ .Values.cloudwatchLogGroup }}`}}" ]; then
-                      echo "Sending failure log to CloudWatch"
-                      aws logs put-log-events \
-                        --log-group-name "{{`{{ .Values.cloudwatchLogGroup }}`}}" \
-                        --log-stream-name "dns-canary-{{`{{ .Values.name }}`}}" \
-                        --log-events "timestamp=$(date +%s%3N),message=\"DNS Canary failure: $TARGET\""
-                    fi
-
-                    if [ -n "{{`{{ .Values.alertSnsTopicArn }}`}}" ]; then
-                      echo "Triggering SNS alert"
-                      aws sns publish \
-                        --topic-arn "{{`{{ .Values.alertSnsTopicArn }}`}}" \
-                        --message "DNS Canary failure detected for $TARGET in cluster {{`{{ .Values.clusterName }}`}}"
-                    fi
+                    echo "[ERROR] $(date) DNS Canary check failed for $TARGET" >&2
                   fi
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}

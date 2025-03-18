@@ -40,6 +40,16 @@ entries:
   dns-canary:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2025-03-18T16:59:15.949245426Z"
+    description: A Helm chart for Kubernetes
+    digest: 4271ad237bd59009a1455b0e9f29bbece90842cf6b22b89d9f2f5db25b628525
+    name: dns-canary
+    type: application
+    urls:
+    - https://github.com/moonswitch/charts/releases/download/dns-canary-0.2.0/dns-canary-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2025-03-14T15:33:38.33451564Z"
     description: A Helm chart for Kubernetes
     digest: 0edb15beb433151042804f7b7fcda3c25d96317f37beeb6435903268f14f9665
@@ -952,4 +962,4 @@ entries:
     urls:
     - https://github.com/moonswitch/charts/releases/download/moonswitch-agent-0.1.0/moonswitch-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2025-03-14T15:33:38.334573738Z"
+generated: "2025-03-18T16:59:15.949335313Z"

@@ -40,12 +40,12 @@ spec:
                 - |
                   set -e
                   TARGET="{{ .Values.targetService }}"
-                  echo "$(date) Checking DNS resolution for $TARGET"
+                  echo "[INFO] $(date '+%F %T %Z') Checking DNS resolution for $TARGET"
 
                   if nslookup $TARGET; then
-                    echo "$(date) DNS Canary check passed for $TARGET"
+                    echo "[INFO] $(date '+%F %T %Z') DNS Canary check passed for $TARGET"
                   else
-                    echo "[ERROR] $(date) DNS Canary check failed for $TARGET" >&2
+                    echo "[ERROR] $(date '+%F %T %Z') DNS Canary check failed for $TARGET" >&2
                   fi
               resources:
                 {{- toYaml .Values.resources | nindent 16 }}
